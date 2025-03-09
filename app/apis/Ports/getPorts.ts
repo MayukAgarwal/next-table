@@ -1,20 +1,7 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { ErrorResponse } from "../helpers.types";
 import { catchHandler } from "../helpers";
-
-export type PortData = {
-  id: string;
-  name: string;
-  city: string;
-  country: string;
-  alias: string[];
-  regions: string[];
-  coordinates: [number, number];
-  province: string;
-  timezone: string;
-  unlocs: string[];
-  code: string;
-};
+import { PortData } from "@/app/types/ports";
 
 export type PortDataResponse = {
   data: PortData[];

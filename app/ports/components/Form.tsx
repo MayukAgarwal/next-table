@@ -1,5 +1,5 @@
 "use client";
-import { PortData } from "@/app/apis/Ports/getPorts";
+import { PortData } from "@/app/types/ports";
 import React, { useState } from "react";
 
 type PortFormProps = {

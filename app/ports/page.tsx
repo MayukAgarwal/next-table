@@ -1,11 +1,15 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { COL_DATA } from "./constants";
-import { getPortsData, PortData, QueryParams } from "../apis/Ports/getPorts";
+import { getPortsData, QueryParams } from "../apis/Ports/getPorts";
 import SearchComponent from "../components/Search";
 import Table, { PaginationProps } from "../components/Table";
 import Modal from "../components/Modal";
 import PortForm from "./components/Form";
+import { PortData } from "../types/ports";
+import { createPort } from "../apis/Ports/createPort";
+import { updatePort } from "../apis/Ports/updatePort";
+import { deletePort } from "../apis/Ports/deletePort";
 
 export default function Ports() {
   const [filter, setFilter] = useState<Record<string, string>>();
@@ -20,7 +24,14 @@ export default function Ports() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPort, setSelectedPort] = useState<PortData | null>(null);
 
-  const fetchPorts = async (queryParams: QueryParams) => {
+  const fetchPorts = useCallback(async () => {
+    const queryParams: QueryParams = {
+      _page: pagination.currentPage,
+      _limit: 10,
+      ...filter,
+    };
+    if (searchText) queryParams.q = searchText;
+    if (sort) queryParams._sort = sort;
     setLoading(true);
     try {
       const response = await getPortsData(queryParams);
@@ -36,7 +47,7 @@ export default function Ports() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter, pagination.currentPage, searchText, sort]);
 
   const onSearch = (text: string) => {
     setSearchText(text);
@@ -44,20 +55,20 @@ export default function Ports() {
 
   const handleCreate = (data: PortData) => {
     const NewData = { ...data, id: Date.now().toString() };
-    setPorts((prev) => [...prev, NewData]);
+    createPort(NewData);
     setIsModalOpen(false); // Close modal after creation
-    // TODO: Handle Create API call
+    fetchPorts();
   };
 
   const handleUpdate = (data: PortData) => {
-    setPorts((prev) => prev.map((port) => (port.id === data.id ? data : port)));
-    setIsModalOpen(false); // Close modal after update
-    // TODO: Handle Update API call
+    updatePort(data);
+    setIsModalOpen(false);
+    fetchPorts();
   };
 
   const handleDelete = (data: PortData) => {
-    setPorts((prev) => prev.filter((port) => port.id !== data.id));
-    // TODO: Handle Delete API call
+    deletePort(data.id);
+    fetchPorts();
   };
 
   const openModalForCreate = () => {
@@ -71,15 +82,8 @@ export default function Ports() {
   };
 
   useEffect(() => {
-    const queryParams: QueryParams = {
-      _page: pagination.currentPage,
-      _limit: 10,
-      ...filter,
-    };
-    if (searchText) queryParams.q = searchText;
-    if (sort) queryParams._sort = sort;
-    fetchPorts(queryParams);
-  }, [searchText, sort, filter, pagination.currentPage]);
+    fetchPorts();
+  }, [searchText, sort, filter, pagination.currentPage, fetchPorts]);
 
   return (
     <div className="flex flex-col items-center justify-center">
