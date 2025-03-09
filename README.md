@@ -17,5 +17,5 @@ npm run dev
 ```bash
 npm run server
 ```
-Open [http://localhost:3000](http://localhost:3000](http://localhost:3000/ports) with your browser to see the result.
+Open [http://localhost:3000/ports](http://localhost:3000/ports) with your browser to see the result.
 For JSON Server open [http://localhost:5000/ports](http://localhost:5000/ports)
