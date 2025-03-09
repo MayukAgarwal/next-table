@@ -1,12 +1,12 @@
 import React from "react";
 
-type PaginationProps = {
+type PaginationTableProps = {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
 };
 
-const Pagination: React.FC<PaginationProps> = ({
+const Pagination: React.FC<PaginationTableProps> = ({
   currentPage,
   totalPages,
   onPageChange,

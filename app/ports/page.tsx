@@ -1,28 +1,29 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import { COL_DATA } from "./constants";
+import { createPort } from "../apis/Ports/createPort";
+import { deletePort } from "../apis/Ports/deletePort";
 import { getPortsData, QueryParams } from "../apis/Ports/getPorts";
-import SearchComponent from "../components/Search";
-import Table, { PaginationProps } from "../components/Table";
+import { PaginationProps } from "../components/Table/types";
+import { PortData } from "../types/ports";
+import { updatePort } from "../apis/Ports/updatePort";
 import Modal from "../components/Modal";
 import PortForm from "./components/Form";
-import { PortData } from "../types/ports";
-import { createPort } from "../apis/Ports/createPort";
-import { updatePort } from "../apis/Ports/updatePort";
-import { deletePort } from "../apis/Ports/deletePort";
+import SearchComponent from "../components/Search";
+import Table from "../components/Table";
 
 export default function Ports() {
   const [filter, setFilter] = useState<Record<string, string>>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [ports, setPorts] = useState<PortData[]>([]);
-  const [searchText, setSearchText] = useState("");
-  const [sort, setSort] = useState<string>("");
   const [pagination, setPagination] = useState<PaginationProps>({
     currentPage: 1,
     totalPages: 0,
   });
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [ports, setPorts] = useState<PortData[]>([]);
+  const [searchText, setSearchText] = useState("");
   const [selectedPort, setSelectedPort] = useState<PortData | null>(null);
+  const [sort, setSort] = useState<string>("");
 
   const fetchPorts = useCallback(async () => {
     const queryParams: QueryParams = {

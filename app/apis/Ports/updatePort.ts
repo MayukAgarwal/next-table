@@ -1,6 +1,6 @@
 import axios, { AxiosResponse, AxiosError } from "axios";
-import { ErrorResponse } from "../helpers.types";
 import { catchHandler } from "../helpers";
+import { ErrorResponse } from "../helpers.types";
 import { PortData } from "@/app/types/ports";
 
 export type PortDataResponse = {

@@ -1,4 +1,4 @@
-import type { ColData } from "../components/Table";
+import { ColData } from "../components/Table/types";
 
 export const COL_DATA: ColData[] = [
   { key: "id", label: "ID" },
