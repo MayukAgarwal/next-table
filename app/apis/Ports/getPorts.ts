@@ -14,10 +14,10 @@ export type PortData = {
   timezone: string;
   unlocs: string[];
   code: string;
-}[];
+};
 
 export type PortDataResponse = {
-  data: PortData;
+  data: PortData[];
   lastPage: number;
 };
 
@@ -42,7 +42,7 @@ export const getPortsData = (
     .get(URL, {
       params: queryParams,
     })
-    .then((response: AxiosResponse<PortData>) => {
+    .then((response: AxiosResponse<PortData[]>) => {
       const lastPageMatch = response.headers.link.match(
         /<[^>]+_page=(\d+)[^>]*>;\s*rel="last"/
       );

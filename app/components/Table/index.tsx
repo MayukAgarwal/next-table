@@ -18,14 +18,16 @@ export type PaginationProps = {
   totalPages: number;
 };
 
-export type TableProps<tdata> = {
-  rowData: tdata;
+export type TableProps<T> = {
+  rowData: T;
   columns: ColData[];
   onSort?: (sort: string) => void;
   onFilter?: (filter: Record<string, string>) => void;
   onPageChange?: (pageNumber: number) => void;
   loading?: boolean;
   pagination?: PaginationProps;
+  onEdit?: (data: T) => void;
+  onDelete?: (data: T) => void;
 };
 
 function Table({
@@ -36,6 +38,8 @@ function Table({
   onPageChange,
   loading = false,
   pagination,
+  onDelete,
+  onEdit,
 }: TableProps<any>) {
   const [sort, setSort] = useState<string>("");
   const [filter, setFilter] = useState<Record<string, string>>();
@@ -110,6 +114,11 @@ function Table({
                   </div>
                 </th>
               ))}
+              {onEdit || onDelete ? (
+                <th scope="col" className="px-6 py-3">
+                  Actions
+                </th>
+              ) : null}
             </tr>
           </thead>
           <tbody>
@@ -127,6 +136,26 @@ function Table({
                     {eachRow[column.key]}
                   </td>
                 ))}
+                {onEdit || onDelete ? (
+                  <td className="px-6 py-4">
+                    {onEdit ? (
+                      <button
+                        onClick={() => onEdit?.(eachRow)}
+                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      >
+                        Edit
+                      </button>
+                    ) : null}
+                    {onDelete ? (
+                      <button
+                        onClick={() => onDelete?.(eachRow)}
+                        className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                      >
+                        Delete
+                      </button>
+                    ) : null}
+                  </td>
+                ) : null}
               </tr>
             ))}
           </tbody>
